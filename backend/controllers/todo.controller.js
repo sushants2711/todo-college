@@ -11,9 +11,11 @@ export const createTodo = async (req, res) => {
             });
         };
 
+        const loggedInUser = req.user._id;
+
         const newTodo = new todoModel({
             text,
-            user: req.user._id
+            user: loggedInUser
         });
 
         const saveTodo = await newTodo.save();
@@ -37,8 +39,8 @@ export const fetchAllTodo = async (req, res) => {
     try {
         const loggedInUser = req.user._id;
 
-        if(!loggedInUser) {
-            return res.status(400).json({
+        if (!loggedInUser) {
+            return res.status(403).json({
                 success: false,
                 message: "User is not authenticated"
             });
@@ -74,8 +76,8 @@ export const updateTodo = async (req, res) => {
 
         const loggedInUser = req.user._id;
 
-        if(!loggedInUser) {
-            return res.status(400).json({
+        if (!loggedInUser) {
+            return res.status(403).json({
                 success: false,
                 message: "User is not authenticated"
             });
@@ -87,6 +89,13 @@ export const updateTodo = async (req, res) => {
             return res.status(200).json({
                 success: false,
                 message: "Bad request",
+            });
+        };
+
+        if (todoIsAvailable.user.toString() !== loggedInUser.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You should only update your own todo"
             });
         };
 
@@ -122,6 +131,15 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
+        const loggedInUser = req.user._id;
+
+        if (!loggedInUser) {
+            return res.status(403).json({
+                success: false,
+                
+            })
+        }
+
         const todoExist = await todoModel.findById(id);
 
         if (!todoExist) {
@@ -131,7 +149,14 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
-        if(!todoExist.isCompleted) {
+        if (todoExist.user.toString() !== loggedInUser.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You should only delete your own todo"
+            });
+        };
+
+        if (!todoExist.isCompleted) {
             return res.status(400).json({
                 success: false,
                 message: "Complete your todo first then it should be deleted"

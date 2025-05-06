@@ -109,3 +109,58 @@ export const logout = async (req, res) => {
         });
     };
 };
+
+export const deleteUserAccount = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        const loggedInUser = req.user._id;
+
+        if (!loggedInUser) {
+            return res.status(403).json({
+                success: false,
+                message: "User is not authenticated"
+            });
+        };
+
+        const userExist = await user.findOne({ email });
+
+        if (!userExist) {
+            return res.status(400).json({
+                success: false,
+                message: "User is not exist"
+            });
+        };
+
+        if (userExist._id.toString()!== loggedInUser.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You should only delete their own account"
+            });
+        };
+
+        const checkPassword = await bcrypt.compare(password, userExist.password)
+        if(name !== userExist.name || email !== userExist.email || !checkPassword ) {
+            return res.status(400).json({
+                success: false,
+                message: "All field are not matching"
+            });
+        };
+
+        await user.findByIdAndDelete(userExist._id);
+
+        res.clearCookie("jwt");
+        
+        return res.status(200).json({
+            success: true,
+            message: "User account delete successfull"
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server error",
+            error: error.message
+        });
+    };
+};
