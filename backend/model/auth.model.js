@@ -1,6 +1,7 @@
 
 import mongoose from "mongoose";
 
+// createa userModel for register a user 
 const userModel = mongoose.Schema({
     name: {
         type: String,

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// create a todo model for save all the todo of user 
 const todoModel = mongoose.Schema({
     text: {
         type: String,

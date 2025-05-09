@@ -1,9 +1,12 @@
 import todoModel from "../model/todo.model.js";
 
+// create todo logic for controller
 export const createTodo = async (req, res) => {
     try {
+        // take the request from body
         const { text } = req.body;
 
+        // If user is find with the help of cookies
         if (!req.user) {
             return res.status(400).json({
                 success: false,
@@ -11,15 +14,19 @@ export const createTodo = async (req, res) => {
             });
         };
 
+        // check logged in user
         const loggedInUser = req.user._id;
 
+        // if user is find than create a new instance in our database
         const newTodo = new todoModel({
             text,
             user: loggedInUser
         });
 
+        // save the data in our database
         const saveTodo = await newTodo.save();
 
+        // return a status code and other logic
         return res.status(201).json({
             success: true,
             message: "Todo created",
@@ -35,10 +42,13 @@ export const createTodo = async (req, res) => {
     };
 };
 
+// fetch only logged In user todo
 export const fetchAllTodo = async (req, res) => {
     try {
+        // find a logged in user
         const loggedInUser = req.user._id;
 
+        // if not logged in user find than 
         if (!loggedInUser) {
             return res.status(403).json({
                 success: false,
@@ -46,8 +56,10 @@ export const fetchAllTodo = async (req, res) => {
             });
         };
 
+        // find all todo of logged in user
         const allData = await todoModel.find({ user: loggedInUser });
 
+        // return a some status code 
         return res.status(200).json({
             success: true,
             message: "Data fetch successfully",
@@ -63,10 +75,13 @@ export const fetchAllTodo = async (req, res) => {
     };
 };
 
+// update todo controller logic
 export const updateTodo = async (req, res) => {
     try {
+        // take the id from req.params
         const id = req.params.id;
 
+        // If id is not find than 
         if (!id) {
             return res.status(400).json({
                 success: false,
@@ -74,8 +89,10 @@ export const updateTodo = async (req, res) => {
             });
         };
 
+        // fethc the logged in user with the help of cookies
         const loggedInUser = req.user._id;
 
+        // If not find logged in user than 
         if (!loggedInUser) {
             return res.status(403).json({
                 success: false,
@@ -83,8 +100,10 @@ export const updateTodo = async (req, res) => {
             });
         };
 
+        // check todo is available or not in our database
         const todoIsAvailable = await todoModel.findById(id);
 
+        // If todo is not available than
         if (!todoIsAvailable) {
             return res.status(200).json({
                 success: false,
@@ -92,6 +111,7 @@ export const updateTodo = async (req, res) => {
             });
         };
 
+        // check tthe todo availbale and logged in user id is same 
         if (todoIsAvailable.user.toString() !== loggedInUser.toString()) {
             return res.status(403).json({
                 success: false,
@@ -99,12 +119,14 @@ export const updateTodo = async (req, res) => {
             });
         };
 
+        // update the todo if it is true than to false and false to true viceversa
         const modifiedTodo = await todoModel.findByIdAndUpdate(
             id,
             { isCompleted: !todoIsAvailable.isCompleted },
             { new: true }
         );
 
+        // return a status code 
         return res.status(200).json({
             success: true,
             message: "Todo update successfully",
@@ -120,10 +142,13 @@ export const updateTodo = async (req, res) => {
     };
 };
 
+// delete todo controller logic
 export const deleteTodo = async (req, res) => {
     try {
+        // take the id from req.params
         const id = req.params.id;
 
+         // If id is not find than 
         if (!id) {
             return res.status(400).json({
                 success: false,
@@ -131,8 +156,10 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
+        // fethc the logged in user with the help of cookies
         const loggedInUser = req.user._id;
 
+         // If not find logged in user than 
         if (!loggedInUser) {
             return res.status(403).json({
                 success: false,
@@ -140,8 +167,10 @@ export const deleteTodo = async (req, res) => {
             })
         }
 
+        // check todo is available or not in our database
         const todoExist = await todoModel.findById(id);
 
+        // If todo is not exist than
         if (!todoExist) {
             return res.status(400).json({
                 success: false,
@@ -149,6 +178,7 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
+         // check tthe todo availbale and logged in user id is same 
         if (todoExist.user.toString() !== loggedInUser.toString()) {
             return res.status(403).json({
                 success: false,
@@ -156,6 +186,7 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
+        // If todo is not completed than 
         if (!todoExist.isCompleted) {
             return res.status(400).json({
                 success: false,
@@ -163,8 +194,10 @@ export const deleteTodo = async (req, res) => {
             });
         };
 
+        // delete the todo from our database
         await todoModel.findByIdAndDelete(id);
 
+        // return a logic 
         return res.status(200).json({
             success: true,
             message: "Todo deleted successfully"

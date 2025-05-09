@@ -2,18 +2,18 @@ import mongoose from "mongoose";
 
 export const ConnectDb = async () => {
     try {
+        // connect to mongodb database
         await
             mongoose.connect(
                 process.env.MONGO_URI
             ).then(() => console.log("db connected"))
                 .catch((error) => console.log(`error occured from ${error}`));
-    } catch (error) {
-        return res
-        .status(500)
-        .json({ 
+    }
+    catch (error) {
+        return res.status(500).json({
             success: false,
-             message: "Internal Server error",
-              error: error.message 
-            });
+            message: "Internal Server error",
+            error: error.message
+        });
     };
 };
