@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
+import React, { useContext, useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../error_handle/message';
 import { AuthenticationContext } from '../contextApi/AuthenticationContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
 
@@ -11,11 +11,13 @@ export const LoginPage = () => {
   const { loginState, setLoginUserName, setLoginState } = useContext(AuthenticationContext);
 
   const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
+    email: '',
+    password: '',
   });
 
+
   const handleChange = (e) => {
+
     const name = e.target.name;
     const value = e.target.value;
 
@@ -23,74 +25,77 @@ export const LoginPage = () => {
       ...loginData,
       [name]: value
     })
-  }
+  };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
     const { email, password } = loginData;
 
+    // Validation
     if (!email || !password) {
-      return handleError("All fields are required ......");
-    };
+      return handleError('All fields are required.');
+    }
 
     if (password.length < 8) {
-      return handleError("password must be 8 characters long");
-    };
+      return handleError('Password must be at least 8 characters long.');
+    }
 
     try {
-      const url = "http://localhost:3000/api/auth/login";
-
-      const response = await fetch(url, {
-        method: "POST",
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
+        credentials: 'include', // Needed for sending cookies if using sessions
         body: JSON.stringify(loginData),
-        credentials: 'include'
       });
 
       const result = await response.json();
-      console.log(result);
+
 
       const { success, message, error, name, email } = result;
 
       if (success) {
-
         handleSuccess(message);
 
+        // Save to localStorage
+        localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
+
+        // Update context
         setLoginUserName(name);
-
-        localStorage.setItem("email", email);
-
         setLoginState(true);
 
+        // Navigate after a slight delay
         setTimeout(() => {
-          navigate("/home");
+          navigate('/home');
         }, 1000);
 
-        setLoginData({
-          email: "",
-          password: ""
-        });
-      }
+        // Reset form
+        setLoginData({ email: '', password: '' });
 
-      else if (error) {
+      } else if (error) {
         handleError(error);
+      } else {
+        handleError(message || 'Login failed');
       }
-
-      else if (!success) {
-        handleError(message)
-      }
-
-    } catch (error) {
-      handleError(error);
+    } catch (err) {
+      handleError('Something went wrong. Try again later.');
     };
   };
 
-  return (
+ 
 
+  // Restore context state from localStorage (on page reload)
+  useEffect(() => {
+    const nameFromStorage = localStorage.getItem('name');
+    if (nameFromStorage) {
+      setLoginUserName(nameFromStorage);
+      setLoginState(true);
+    };
+  }, [setLoginUserName, setLoginState]);
+
+  return (
     <>
       <div className="min-h-screen bg-gradient-to-r from-gray-600 via-white to-gray-600 flex items-center justify-center px-4">
         <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
@@ -125,12 +130,15 @@ export const LoginPage = () => {
               Login
             </button>
             <p className="text-sm text-center text-gray-500">
-              Don't have an account? <span className="text-blue-600 hover:underline cursor-pointer">Sign Up</span>
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-blue-600 hover:underline">
+                Sign Up
+              </Link>
             </p>
           </form>
         </div>
       </div>
       <ToastContainer />
     </>
-  )
-}
+  );
+};

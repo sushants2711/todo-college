@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Trash2, LogOut } from 'lucide-react';
 import { handleError, handleSuccess } from '../error_handle/message';
 import { ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { AuthenticationContext } from '../contextApi/AuthenticationContext';
 
 export const CreateTodoPage = () => {
   const [todo, setTodo] = useState([]);
   const [loading, setLoading] = useState(null);
   const [newTodo, setNewTodo] = useState({ text: "" });
 
+
+  const { loginUserName,  setLoginState } =  useContext(AuthenticationContext);
+  console.log(loginUserName)
   const navigate = useNavigate();
 
   // Fetch all todos
@@ -63,7 +67,7 @@ export const CreateTodoPage = () => {
       }
     } catch (err) {
       handleError(err.message);
-    }
+    };
   };
 
   const handleLogout = async () => {
@@ -77,8 +81,17 @@ export const CreateTodoPage = () => {
       const { success, message, error } = result;
 
       if (success) {
+
         handleSuccess(message);
+
+        localStorage.removeItem("name");
+
+        localStorage.removeItem("email");
+
+         setLoginState(false)
+
         navigate("/login");
+
       } else if (!success) {
         handleError(message);
       } else if (error) {
@@ -89,10 +102,67 @@ export const CreateTodoPage = () => {
     }
   };
 
+
+  const handleUpdateTodo = async (id) => {
+    try {
+      const url = `http://localhost:3000/api/todo/update/${id}`;
+      const response = await fetch(url, {
+        method: "PUT",
+        credentials: "include",
+      })
+      const result = await response.json();
+
+      const { success, message, error } = result;
+
+      if (success) {
+        handleSuccess(message);
+        fetchTodo();
+      }
+      else if (!success) {
+        handleError(message);
+      }
+      else if (error) {
+        handleError(error)
+      }
+    } catch (error) {
+      handleError(error)
+    };
+  };
+
+  const handledetete = async (id) => {
+    try {
+      const url = `http://localhost:3000/api/todo/delete/${id}`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      const result = await response.json();
+
+      const { success, message, error } = result;
+
+      if (success) {
+        handleSuccess(message);
+        fetchTodo();
+      }
+      else if (!success) {
+        handleError(message);
+      }
+      else if (error) {
+        handleError(error || "Error occured to delete");
+      };
+
+    } catch (error) {
+      handleError(error || "Error occured to delete the todo");
+    };
+  };
+
   return (
     <>
       {/* Logout Button Circle Top-Right */}
       <div className="fixed top-6 right-6 z-50">
+        <h1>{`Hi ${loginUserName}`}</h1>
         <button
           onClick={handleLogout}
           className="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-all"
@@ -147,6 +217,7 @@ export const CreateTodoPage = () => {
                       className="accent-green-500 w-5 h-5 mt-1"
                       checked={item.isCompleted}
                       readOnly
+                      onChange={() => handleUpdateTodo(item._id)}
                     />
                     <span
                       className={`text-gray-800 font-medium break-words ${item.isCompleted ? 'line-through text-gray-400' : ''
@@ -159,6 +230,7 @@ export const CreateTodoPage = () => {
                     <Trash2
                       size={20}
                       className="text-red-500 cursor-pointer hover:text-red-700 transition-all"
+                      onClick={() => handledetete(item._id)}
                     />
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../error_handle/message';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 export const SignupPage = () => {
@@ -151,7 +151,9 @@ export const SignupPage = () => {
               Sign Up
             </button>
             <p className="text-sm text-center text-gray-500">
-              Already have an account? <span className="text-indigo-600 hover:underline cursor-pointer">Login</span>
+              Already have an account?  <Link to="/login" className="text-blue-600 hover:underline">
+                Login
+              </Link>
             </p>
           </form>
         </div>
