@@ -21,7 +21,7 @@ authRouter.route("/login").post(loginMiddleware, login);
 authRouter.route("/logout").post(ensureAuthentication, logout);
 
 // delete route
-authRouter.route("/delete").post(ensureAuthentication, deleteUserAccountMiddleware, deleteUserAccount);
+authRouter.route("/delete").delete(ensureAuthentication, deleteUserAccountMiddleware, deleteUserAccount);
 
 // export the route so we should use it any where
 export default authRouter;
