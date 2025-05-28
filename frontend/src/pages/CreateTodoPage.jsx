@@ -10,9 +10,7 @@ export const CreateTodoPage = () => {
   const [loading, setLoading] = useState(null);
   const [newTodo, setNewTodo] = useState({ text: "" });
 
-
-  const { loginUserName,  setLoginState } =  useContext(AuthenticationContext);
-  console.log(loginUserName)
+  const { loginUserName, setLoginState } = useContext(AuthenticationContext);
   const navigate = useNavigate();
 
   // Fetch all todos
@@ -81,17 +79,11 @@ export const CreateTodoPage = () => {
       const { success, message, error } = result;
 
       if (success) {
-
         handleSuccess(message);
-
         localStorage.removeItem("name");
-
         localStorage.removeItem("email");
-
-         setLoginState(false)
-
-        navigate("/login");
-
+        setLoginState(false);
+        navigate("/logout");
       } else if (!success) {
         handleError(message);
       } else if (error) {
@@ -101,7 +93,6 @@ export const CreateTodoPage = () => {
       handleError(error.message);
     }
   };
-
 
   const handleUpdateTodo = async (id) => {
     try {
@@ -117,11 +108,9 @@ export const CreateTodoPage = () => {
       if (success) {
         handleSuccess(message);
         fetchTodo();
-      }
-      else if (!success) {
+      } else if (!success) {
         handleError(message);
-      }
-      else if (error) {
+      } else if (error) {
         handleError(error)
       }
     } catch (error) {
@@ -145,14 +134,11 @@ export const CreateTodoPage = () => {
       if (success) {
         handleSuccess(message);
         fetchTodo();
-      }
-      else if (!success) {
+      } else if (!success) {
         handleError(message);
-      }
-      else if (error) {
+      } else if (error) {
         handleError(error || "Error occured to delete");
       };
-
     } catch (error) {
       handleError(error || "Error occured to delete the todo");
     };
@@ -160,9 +146,13 @@ export const CreateTodoPage = () => {
 
   return (
     <>
-      {/* Logout Button Circle Top-Right */}
-      <div className="fixed top-6 right-6 z-50">
-        <h1>{`Hi ${loginUserName}`}</h1>
+      {/* Top Left: User Name */}
+      <div className="fixed top-4 left-4 z-50">
+        <h1 className="text-gray-800 font-semibold text-base sm:text-lg border-b-2">{`Hey ${loginUserName}!`}</h1>
+      </div>
+
+      {/* Top Right: Logout */}
+      <div className="fixed top-4 right-4 z-50">
         <button
           onClick={handleLogout}
           className="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-all"
@@ -172,29 +162,44 @@ export const CreateTodoPage = () => {
         </button>
       </div>
 
+      {/* Bottom Center: Delete Account */}
+      <div className="fixed bottom-4 inset-x-0 flex justify-center z-50">
+        <button
+          onClick={() => navigate('/delete/user')}
+          className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white text-sm rounded-lg shadow-md transition-all"
+        >
+          Delete Account
+        </button>
+      </div>
+
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto mt-10 px-4 space-y-8">
+      <div className="max-w-7xl mx-auto mt-20 px-4 space-y-8 pb-28">
+
 
         {/* Form Section */}
         <div className="bg-white p-6 rounded-2xl shadow-xl max-w-2xl mx-auto">
           <h2 className="text-xl font-semibold mb-4 text-gray-700">Create a New Todo</h2>
-          <form className="flex items-center gap-3" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-3"
+            onSubmit={handleSubmit}
+          >
             <input
               type="text"
               name='text'
               value={newTodo.text}
               onChange={handleChange}
               placeholder="Enter your todo..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             />
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-all"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl shadow-md transition-all font-semibold"
             >
-              Add
+             Add
             </button>
           </form>
         </div>
+
 
         {/* Todo List Section */}
         <div className="bg-white p-6 rounded-2xl shadow-xl">
