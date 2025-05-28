@@ -7,12 +7,26 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependency directories
 /frontend/node_modules
 /backend/node_modules
-/backend/.env
+
+# Env files
+/backend/.env*
+/frontend/.env*
+
+# Build output
 dist
 dist-ssr
+/frontend/build
+/frontend/.next
+
+# Local environment files
 *.local
+
+# Vercel / Turborepo
+.vercel
+.turbo
 
 # Editor directories and files
 .vscode/*
