@@ -59,6 +59,8 @@ export const LoginPage = () => {
         handleSuccess(message);
 
         // Save to localStorage
+        setLoginState(true);
+        console.log("Your login state will be",loginState)
         localStorage.setItem('name', name);
         localStorage.setItem('email', email);
 

@@ -13,6 +13,7 @@ import { useContext } from "react"
 function App() {
 
   const { loginState } = useContext(AuthenticationContext);
+  console.log("app.jsx", loginState)
   return (
     <>
       <Routes>
