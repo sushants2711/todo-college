@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // connect to the frontend url so frontend, backend and database communicates well
 app.use(cors({
-    origin: "https://todo-college.onrender.com",                //"http://localhost:5173" for local server used
+    origin: "https://todo-mern-frontend-dats.onrender.com",                //"http://localhost:5173" for local server used
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"]
