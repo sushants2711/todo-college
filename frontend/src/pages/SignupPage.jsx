@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../error_handle/message';
 import { useNavigate, Link } from 'react-router-dom';
+import { AuthenticationContext } from '../contextApi/AuthenticationContext';
 
 
 export const SignupPage = () => {
 
   const navigate = useNavigate();
+
+  const { setLoginUserName } = useContext(AuthenticationContext);
 
   const [formdata, setFormdata] = useState({
     name: "",
@@ -67,7 +70,7 @@ export const SignupPage = () => {
 
         localStorage.setItem("name", name);
         localStorage.setItem("email", email);
-
+        setLoginUserName(name);
         setTimeout(() => {
           navigate("/home");
         }, 1000);
