@@ -82,7 +82,6 @@ export const CreateTodoPage = () => {
         handleSuccess(message);
         localStorage.removeItem("name");
         localStorage.removeItem("email");
-        setLoginState(false);
         navigate("/logout");
       } else if (!success) {
         handleError(message);

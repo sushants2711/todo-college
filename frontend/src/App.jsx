@@ -5,27 +5,47 @@ import { LoginPage } from "./pages/LoginPage"
 import { LogoutPage } from "./pages/LogoutPage"
 import { DeletePage } from "./pages/DeletePage"
 import { PageNotFound } from "./pages/PageNotFound"
-import { AuthenticationContext } from "./contextApi/AuthenticationContext"
-import { useContext } from "react"
+import { PrivateRoute } from "./route/PrivateRoute"
+import { PublicRoute } from "./route/PublicRoute"
 
 
 
 function App() {
 
-  const { loginState } = useContext(AuthenticationContext);
-  console.log("app.jsx", loginState)
   return (
     <>
       <Routes>
         <Route
           path="/"
-          element={<Navigate to={loginState ? "/home" : "/login"} replace />}
+          element={<Navigate to={"/home"} replace />}
         />
-        <Route path="/home" element={<CreateTodoPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+
+        <Route path="/home" element={
+          <PrivateRoute>
+            <CreateTodoPage />
+          </PrivateRoute>
+        } />
+
+        <Route path="/login" element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+        />
+        <Route path="/signup" element={
+          <PublicRoute>
+            <SignupPage />
+          </PublicRoute>
+        } />
+        
         <Route path="/logout" element={<LogoutPage />} />
-        <Route path="/delete/user" element={<DeletePage />} />
+
+        <Route path="/delete/user" element={
+          <PrivateRoute>
+            <DeletePage />
+          </PrivateRoute>
+
+        } />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>

@@ -57,17 +57,11 @@ export const LoginPage = () => {
 
       if (success) {
         handleSuccess(message);
-
-        // Save to localStorage
-        setLoginState(true);
-        console.log("Your login state will be",loginState)
         localStorage.setItem('name', name);
         localStorage.setItem('email', email);
 
         // Update context
         setLoginUserName(name);
-        setLoginState(true);
-
         // Navigate after a slight delay
         setTimeout(() => {
           navigate('/home');

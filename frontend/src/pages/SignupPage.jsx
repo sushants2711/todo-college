@@ -59,12 +59,14 @@ export const SignupPage = () => {
       const result = await response.json();
       console.log(result);
 
-      const { success, message, error } = result;
+      const { success, message, error, name, email } = result;
 
       if (success) {
 
         handleSuccess(message);
 
+        localStorage.setItem("name", name);
+        localStorage.setItem("email", email);
         setTimeout(() => {
           navigate("/login");
         }, 1000);
