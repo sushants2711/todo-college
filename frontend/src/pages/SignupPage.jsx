@@ -67,8 +67,9 @@ export const SignupPage = () => {
 
         localStorage.setItem("name", name);
         localStorage.setItem("email", email);
+        
         setTimeout(() => {
-          navigate("/login");
+          navigate("/home");
         }, 1000);
 
         setFormdata({
