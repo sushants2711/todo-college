@@ -43,7 +43,7 @@ export const DeletePage = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/auth/delete", {
+      const response = await fetch("https://todo-college-backend.onrender.com/api/auth/delete", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"

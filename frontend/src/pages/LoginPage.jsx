@@ -8,7 +8,7 @@ export const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const { loginState, setLoginUserName, setLoginState } = useContext(AuthenticationContext);
+  const { setLoginUserName, setLoginState } = useContext(AuthenticationContext);
 
   const [loginData, setLoginData] = useState({
     email: '',
@@ -41,7 +41,7 @@ export const LoginPage = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const response = await fetch('https://todo-college-backend.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

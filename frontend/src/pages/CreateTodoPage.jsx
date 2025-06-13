@@ -17,7 +17,7 @@ export const CreateTodoPage = () => {
   const fetchTodo = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/todo/fetch", {
+      const response = await fetch("https://todo-college-backend.onrender.com/api/todo/fetch", {
         method: "GET",
         credentials: "include",
       });
@@ -44,7 +44,7 @@ export const CreateTodoPage = () => {
     if (!newTodo.text) return handleError("Can't submit empty todo");
 
     try {
-      const response = await fetch("http://localhost:3000/api/todo/create", {
+      const response = await fetch("https://todo-college-backend.onrender.com/api/todo/create", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ export const CreateTodoPage = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/logout", {
+      const response = await fetch("https://todo-college-backend.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: 'include'
       });
@@ -95,7 +95,7 @@ export const CreateTodoPage = () => {
 
   const handleUpdateTodo = async (id) => {
     try {
-      const url = `http://localhost:3000/api/todo/update/${id}`;
+      const url = `https://todo-college-backend.onrender.com/api/todo/update/${id}`;
       const response = await fetch(url, {
         method: "PUT",
         credentials: "include",
@@ -119,7 +119,7 @@ export const CreateTodoPage = () => {
 
   const handledetete = async (id) => {
     try {
-      const url = `http://localhost:3000/api/todo/delete/${id}`;
+      const url = `https://todo-college-backend.onrender.com/api/todo/delete/${id}`;
 
       const response = await fetch(url, {
         method: "DELETE",

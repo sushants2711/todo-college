@@ -45,7 +45,7 @@ export const SignupPage = () => {
     };
 
     try {
-      const url = "http://localhost:3000/api/auth/signup";
+      const url = "https://todo-college-backend.onrender.com/auth/signup";
 
       const response = await fetch(url, {
         method: "POST",
