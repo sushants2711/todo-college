@@ -45,7 +45,7 @@ export const SignupPage = () => {
     };
 
     try {
-      const url = "https://todo-college-backend.onrender.com/auth/signup";
+      const url = "https://todo-college-backend.onrender.com/api/auth/signup";
 
       const response = await fetch(url, {
         method: "POST",
@@ -67,7 +67,7 @@ export const SignupPage = () => {
 
         localStorage.setItem("name", name);
         localStorage.setItem("email", email);
-        
+
         setTimeout(() => {
           navigate("/home");
         }, 1000);
